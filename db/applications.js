@@ -58,9 +58,8 @@ module.exports = {
     console.log(req.body);
     var application = req.body.application;
     application.id = id;
-    application.status = 'new';
-
-    var connectionString = process.env.HEROKU_POSTGRESQL_ORANGE_URL || ENV().PG.url;
+  
+    var connectionString = process.env.DATABASE_URL;
     var db = pgp(connectionString);
 
     db.none('insert into applications(id, user_id, job_id, video_token, status)' +
