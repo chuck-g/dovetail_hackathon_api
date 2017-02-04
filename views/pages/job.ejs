@@ -41,19 +41,24 @@
     <input type="text" name="company_logo_url"></input>
   </label>
 
-  <label>Summary<textarea name="summary"></textarea>
+  <label>What problem does company solve?
+    <textarea name="summary"></textarea>
   </label>
 
-  <label>Prompt
+  <label>Question (video prompt)
     <input type="text" name="prompt"></input>
   </label>
 
-  <label>Success Criteria
-    <textarea name="success_criteria"></textarea>
+  <label>Success Criteria (shows in idle)
+    <input type="text" name="success_criteria"></input>
   </label>
 
   <label>Hiring Manager
     <input type="text" name="hiring_manager"></input>
+  </label>
+
+  <label>Hiring Manager Email
+    <input type="text" name="hiring_manager_email"></input>
   </label>
 
   <label>Hiring Manager Pic Url
@@ -89,8 +94,8 @@
           url: '/api/jobs',
           type: 'POST',
           data: jsonStr,
-          success: function(){
-            //window.location="/";
+          success: function(created){
+            window.location=`/api/job/${created.job.id}`;
           },
           dataType: 'json',
           headers: {"Content-Type": "application/json"}

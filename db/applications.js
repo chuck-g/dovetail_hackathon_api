@@ -6,10 +6,12 @@ var promise = require('bluebird');
 var uuid = require('node-uuid');
 var options = {
   // Initialization Options
-  promiseLib: promise,
-  ssl: true
+  promiseLib: promise
 };
 var pgp = require('pg-promise')(options);
+
+var emailHelper = require('sendgrid').mail;
+var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 
 var SELECT_WITH_BASIC_USER = 'select a.*, u.first_name, u.last_name from applications a join users u on u.id = a.user_id';
 
@@ -58,7 +60,7 @@ module.exports = {
     console.log(req.body);
     var application = req.body.application;
     application.id = id;
-  
+
     var connectionString = process.env.DATABASE_URL;
     var db = pgp(connectionString);
 
@@ -66,6 +68,30 @@ module.exports = {
         'values(${id}, ${userId}, ${jobId}, ${video_token}, ${status})',
       application)
       .then(function () {
+
+        db.one(`select * from jobs where id=${job_id}`, application)
+          .then(function (data) {
+
+        // send email to HM
+        var from_email = new emailHelper.Email('noreply@dovetailtalent.com');
+        var to_email = new emailHelper.Email(data.hiring_manager_email);
+        var subject = 'New Application for '+data.label;
+        var body = `Name: ${application.contact_name}\nEmail: ${application.email}\nVideo URL: ${application.video_token}`;
+        var content = new emailHelper.Content('text/plain', body);
+        var mail = new emailHelper.Mail(from_email, subject, to_email, content);
+
+        var request = sg.emptyRequest({
+          method: 'POST',
+          path: '/v3/mail/send',
+          body: mail.toJSON(),
+        });
+
+        sg.API(request, function(error, response) {
+          console.log(response.statusCode);
+          console.log(response.body);
+          console.log(response.headers);
+        });
+
         res.status(200)
           .json({
             application: {id: id}
