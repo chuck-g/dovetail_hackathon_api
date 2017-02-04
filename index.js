@@ -30,8 +30,8 @@ app.get('/job', function(request, response) {
 app.get('/api/jobs', jobDb.query);
 app.post('/api/jobs', jobDb.createRecord);
 
-app.post('/api/applications', applicationsDb.createRecord);
-app.get('/api/applications', applicationsDb.query);
+//app.post('/api/applications', applicationsDb.createRecord);
+//app.get('/api/applications', applicationsDb.query);
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
