@@ -24,7 +24,7 @@ module.exports = {
 
   getRecord: function (req, res, next) {
     console.log(`get application ${req.params.id}`)
-    var connectionString = process.env.DATABASE_URL;
+    var connectionString = process.env.DATABASE_URLr;
     var db = pgp(connectionString);
     db.one(`${SELECT_WITH_BASIC_USER} where a.id = $1`, req.params.id)
       .then(function (appData) {
