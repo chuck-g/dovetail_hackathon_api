@@ -32,7 +32,8 @@ module.exports = {
   getRecord: function (req, res, next) {
     console.log(`getJob ${req.params.id}`)
     var connectionString = process.env.DATABASE_URL;
-    var db = pgp(connectionString);
+    var db = this.db || pgp(connectionString);
+    this.db = db;
     db.one('select * from jobs where id = $1', req.params.id)
       .then(function (data) {
         res.status(200)
@@ -48,7 +49,8 @@ module.exports = {
     let maybeCompanyId = _.get(req, 'query.company_id', null);
     //console.log(`get jobs for company ${req.query.company_id}`);
     var connectionString = process.env.DATABASE_URL;
-    var db = pgp(connectionString);
+    var db = this.db || pgp(connectionString);
+    this.db = db;
     let whereClause = '';
     if(maybeCompanyId !== null){
       whereClause = `where company_id = $1`;
@@ -72,7 +74,8 @@ module.exports = {
     job.id = id;
 
     var connectionString = process.env.DATABASE_URL;
-    var db = pgp(connectionString);
+    var db = this.db || pgp(connectionString);
+    this.db = db;
 
     db.none('insert into jobs(id, label, summary, prompt, success_criteria, company_name, company_logo_url, hiring_manager, hiring_manager_pic_url, hiring_manager_email)' +
         'values(${id}, ${label}, ${summary}, ${prompt}, ${success_criteria}, ${company_name}, ${company_logo_url}, ${hiring_manager}, ${hiring_manager_pic_url}, ${hiring_manager_email})',
