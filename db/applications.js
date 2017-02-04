@@ -24,7 +24,7 @@ module.exports = {
 
   getRecord: function (req, res, next) {
     console.log(`get application ${req.params.id}`)
-    var connectionString = process.env.HEROKU_POSTGRESQL_ORANGE_URL || ENV().PG.url;
+    var connectionString = process.env.DATABASE_URL;
     var db = pgp(connectionString);
     db.one(`${SELECT_WITH_BASIC_USER} where a.id = $1`, req.params.id)
       .then(function (appData) {
@@ -39,7 +39,7 @@ module.exports = {
   },
   query: function (req, res, next) {
     console.log(`get applications ${req.query.job_id}`)
-    var connectionString = process.env.HEROKU_POSTGRESQL_ORANGE_URL || ENV().PG.url;
+    var connectionString = process.env.DATABASE_URL;
     var db = pgp(connectionString);
     db.manyOrNone(`${SELECT_WITH_BASIC_USER} where a.job_id = $1`, req.query.job_id)
       .then(function (data) {
@@ -81,7 +81,7 @@ module.exports = {
     var application = req.body.application;
     application.id = req.params.id;
 
-    var connectionString = process.env.HEROKU_POSTGRESQL_ORANGE_URL || ENV().PG.url;
+    var connectionString = process.env.DATABASE_URL;
     var db = pgp(connectionString);
 
     db.none('update applications set video_token = ${videoToken}, status = ${status} where id = ${id}',
