@@ -24,6 +24,7 @@ CREATE TABLE jobs (
   hiring_manager text,
   hiring_manager_pic_url text,
   hiring_manager_email text,
+  hiring_manager_title text,
   created_at TIMESTAMP NOT NULL default now()
 );
 
