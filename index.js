@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var jobDb = require('./db/jobs');
-var applicationsDb =  require('./db/applications');
+//var applicationsDb =  require('./db/applications');
 var pg = require('pg');
 app.set('port', (process.env.PORT || 5000));
 
