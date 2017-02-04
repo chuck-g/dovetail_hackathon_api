@@ -34,15 +34,15 @@ module.exports = {
     var id = uuid.v4();
     console.log("Create Feedback:");
     console.log(req.body);
-    var job = req.body.feedback;
-    job.id = id;
+    var feedback = req.body;
+    feedback.id = id;
 
     var connectionString = process.env.DATABASE_URL;
     var db = pgp(connectionString);
 
     db.none('insert into feedback(id, job_id, contact_name, email, rating, follow_up_opt_in)' +
         'values(${id}, ${job_id}, ${contact_name}, ${email}, ${rating}, ${follow_up_opt_in})',
-      job)
+      feedback)
       .then(function () {
         res.status(200)
           .json({
