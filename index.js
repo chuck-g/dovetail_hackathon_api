@@ -1,4 +1,4 @@
-/*var express = require('express');
+var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var jobDb = require('./db/jobs');
@@ -23,9 +23,9 @@ app.post('/api/jobs', jobDb.createRecord);
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
-});*/
+});
 
-var cool = require('cool-ascii-faces');
+/*var cool = require('cool-ascii-faces');
 var express = require('express');
 var app = express();
 
@@ -48,3 +48,4 @@ app.get('/cool', function(request, response) {
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
+*/
