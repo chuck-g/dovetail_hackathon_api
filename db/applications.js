@@ -1,6 +1,6 @@
 "use strict";
 /*jshint node:true*/
-var ENV = require('../../config/environment.js');
+// var ENV = require('../../config/environment.js');
 
 var promise = require('bluebird');
 var uuid = require('node-uuid');
@@ -24,21 +24,21 @@ module.exports = {
   //   return pgp(connectionString);
   // },
 
-  getRecord: function (req, res, next) {
-    console.log(`get application ${req.params.id}`)
-    var connectionString = process.env.DATABASE_URLr;
-    var db = pgp(connectionString);
-    db.one(`${SELECT_WITH_BASIC_USER} where a.id = $1`, req.params.id)
-      .then(function (appData) {
-        res.status(200)
-          .json({
-            application: appData
-          });
-      })
-      .catch(function (err) {
-        return next(err);
-      });
-  },
+  // getRecord: function (req, res, next) {
+  //   console.log(`get application ${req.params.id}`)
+  //   var connectionString = process.env.DATABASE_URLr;
+  //   var db = pgp(connectionString);
+  //   db.one(`${SELECT_WITH_BASIC_USER} where a.id = $1`, req.params.id)
+  //     .then(function (appData) {
+  //       res.status(200)
+  //         .json({
+  //           application: appData
+  //         });
+  //     })
+  //     .catch(function (err) {
+  //       return next(err);
+  //     });
+  // },
   query: function (req, res, next) {
     console.log(`get applications ${req.query.job_id}`)
     var connectionString = process.env.DATABASE_URL;
@@ -64,62 +64,43 @@ module.exports = {
     var connectionString = process.env.DATABASE_URL;
     var db = pgp(connectionString);
 
-    db.none('insert into applications(id, user_id, job_id, video_token, status)' +
-        'values(${id}, ${userId}, ${jobId}, ${video_token}, ${status})',
+    db.none('insert into applications(id, user_id, job_id, video_token)' +
+        'values(${id}, ${user_id}, ${job_id}, ${video_token})',
       application)
       .then(function () {
-
-        db.one(`select * from jobs where id=${job_id}`, application)
-          .then(function (data) {
-
-        // send email to HM
-        var from_email = new emailHelper.Email('noreply@dovetailtalent.com');
-        var to_email = new emailHelper.Email(data.hiring_manager_email);
-        var subject = 'New Application for '+data.label;
-        var body = `Name: ${application.contact_name}\nEmail: ${application.email}\nVideo URL: ${application.video_token}`;
-        var content = new emailHelper.Content('text/plain', body);
-        var mail = new emailHelper.Mail(from_email, subject, to_email, content);
-
-        var request = sg.emptyRequest({
-          method: 'POST',
-          path: '/v3/mail/send',
-          body: mail.toJSON(),
-        });
-
-        sg.API(request, function(error, response) {
-          console.log(response.statusCode);
-          console.log(response.body);
-          console.log(response.headers);
-        });
 
         res.status(200)
           .json({
             application: {id: id}
           });
-      })
-      .catch(function (err) {
-        return next(err);
-      });
-  },
-  updateRecord: function (req, res, next) {
-    console.log(`put application ${req.params.id}`)
-    console.log(req.body);
-    var application = req.body.application;
-    application.id = req.params.id;
 
-    var connectionString = process.env.DATABASE_URL;
-    var db = pgp(connectionString);
+        db.one(`select * from jobs where id=${job_id}`, application)
+          .then(function (data) {
 
-    db.none('update applications set video_token = ${videoToken}, status = ${status} where id = ${id}',
-      application)
-      .then(function () {
-        res.status(200)
-          .json({
-            application: application
+          // send email to HM
+          var from_email = new emailHelper.Email('noreply@dovetailtalent.com');
+          var to_email = new emailHelper.Email(data.hiring_manager_email);
+          var subject = 'New Application for '+data.label;
+          var body = `Name: ${application.contact_name}\nEmail: ${application.email}\nVideo URL: ${application.video_token}`;
+          var content = new emailHelper.Content('text/plain', body);
+          var mail = new emailHelper.Mail(from_email, subject, to_email, content);
+
+          var request = sg.emptyRequest({
+            method: 'POST',
+            path: '/v3/mail/send',
+            body: mail.toJSON(),
           });
+
+          sg.API(request, function(error, response) {
+            console.log(response.statusCode);
+            console.log(response.body);
+            console.log(response.headers);
+          });
+
       })
       .catch(function (err) {
         return next(err);
       });
+    })
   }
 };

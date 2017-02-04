@@ -2,7 +2,8 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var jobDb = require('./db/jobs');
-//var applicationsDb =  require('./db/applications');
+var feedbackDb = require('./db/feedback');
+var applicationsDb =  require('./db/applications');
 
 var pg = require('pg');
 app.set('port', (process.env.PORT || 5000));
@@ -32,8 +33,11 @@ app.get('/api/job/:id', jobDb.getRecord);
 app.get('/api/jobs', jobDb.query);
 app.post('/api/jobs', jobDb.createRecord);
 
-//app.post('/api/applications', applicationsDb.createRecord);
-//app.get('/api/applications', applicationsDb.query);
+app.post('/api/applications', applicationsDb.createRecord);
+app.get('/api/applications', applicationsDb.query);
+
+app.post('/api/feedback', feedbackDb.createRecord);
+
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
