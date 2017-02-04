@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+  <style>
+    label {
+      display: block;
+    }
+    input {
+      display: block;
+    }
+    input[type=text] {
+      width: 300px;
+    }
+    textarea {
+      width: 600px;
+      height: 100px;
+    }
+    html {
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Create Job for Capital Factory Foyer</h1>
+
+<form id="jobForm" method="post">
+  <label>Job Title
+    <input type="text" name="label"></input>
+  </label>
+
+  <label>Company Name
+    <input type="text" name="company_name"></input>
+  </label>
+
+  <label>Company Logo Url
+    <input type="text" name="company_logo_url"></input>
+  </label>
+
+  <label>Summary<textarea name="summary"></textarea>
+  </label>
+
+  <label>Prompt
+    <input type="text" name="prompt"></input>
+  </label>
+
+  <label>Success Criteria
+    <textarea name="success_criteria"></textarea>
+  </label>
+
+  <label>Hiring Manager
+    <input type="text" name="hiring_manager"></input>
+  </label>
+
+  <label>Hiring Manager Pic Url
+    <input type="text" name="hiring_manager_pic_url"></input>
+  </label>
+
+  <div class="errors">Please fill in all fields</div>
+  <input type="submit" value="Submit" class="submitBtn"></input>
+
+</form>
+
+<script type="application/javascript">
+  $(document).ready(function(){
+    $(".errors").hide();
+    $('#jobForm').submit(function(e){
+      e.preventDefault();
+      // $('.submitBtn').disable();
+      var json = {};
+      var missing = false;
+      $("#jobForm").serializeArray().map(function(obj){
+        json[obj.name]=obj.value;
+        if(!obj.value){
+          missing = true;
+        }
+      });
+      console.log(json);
+      var jsonStr = JSON.stringify({job: json});
+      if(missing){
+        $(".errors").show();
+        return;
+      }else{
+        $.ajax({
+          url: '/api/jobs',
+          type: 'POST',
+          data: jsonStr,
+          success: function(){
+            //window.location="/";
+          },
+          dataType: 'json',
+          headers: {"Content-Type": "application/json"}
+          });
+      }
+    })
+  });
+</script>
+
+</body>
+
+</html>

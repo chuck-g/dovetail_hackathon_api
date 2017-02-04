@@ -17,6 +17,14 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
+app.get('/job', function(request, response) {
+  response.render('pages/job');
+});
+// app.post('/job/create', function(request, response) {
+//   console.log(request.body);
+//   response.render('pages/index');
+// });
+
 app.get('/api/jobs', jobDb.query);
 app.post('/api/jobs', jobDb.createRecord);
 
