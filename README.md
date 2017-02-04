@@ -17,6 +17,11 @@ $ npm start
 
 Your app should now be running on [localhost:5000](http://localhost:5000/).
 
+## Git remotes
+$ git remote -v
+heroku	https://git.heroku.com/radiant-woodland-15302.git (fetch)
+heroku	https://git.heroku.com/radiant-woodland-15302.git (push)
+
 ## Deploying to Heroku
 
 ```

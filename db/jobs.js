@@ -46,7 +46,7 @@ module.exports = {
   // },
   query: function (req, res, next) {
     let maybeCompanyId = _.get(req, 'query.company_id', null);
-    console.log(`get jobs for company ${req.query.company_id}`);
+    //console.log(`get jobs for company ${req.query.company_id}`);
     var connectionString = process.env.DATABASE_URL;
     var db = pgp(connectionString);
     let whereClause = '';
