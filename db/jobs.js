@@ -75,7 +75,7 @@ module.exports = {
     var db = pgp(connectionString);
 
     db.none('insert into jobs(id, label, summary, prompt, success_criteria, company_name, company_logo_url, hiring_manager, hiring_manager_pic_url, hiring_manager_email)' +
-        'values(${id}, ${label}, ${summary}, ${prompt}, ${success_criteria}, ${company_name}, ${company_logo_url}, ${hiring_manager}, ${hiring_manager_pic_url}, ${hiring_manager_pic_email})',
+        'values(${id}, ${label}, ${summary}, ${prompt}, ${success_criteria}, ${company_name}, ${company_logo_url}, ${hiring_manager}, ${hiring_manager_pic_url}, ${hiring_manager_email})',
       job)
       .then(function () {
         res.status(200)
