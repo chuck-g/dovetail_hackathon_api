@@ -42,8 +42,7 @@ module.exports = {
   query: function (req, res, next) {
     console.log(`get applications ${req.query.job_id}`)
     var connectionString = process.env.DATABASE_URL;
-    var db = this.db || pgp(connectionString);
-    this.db = db;
+    var db = pgp(connectionString);
     db.manyOrNone(`${SELECT_WITH_BASIC_USER} where a.job_id = $1`, req.query.job_id)
       .then(function (data) {
         res.status(200)
@@ -63,9 +62,8 @@ module.exports = {
     application.id = id;
 
     var connectionString = process.env.DATABASE_URL;
-    var db = this.db || pgp(connectionString);
-    this.db = db;
-    
+    var db = pgp(connectionString);
+
     db.none('insert into applications(id, user_id, job_id, video_token)' +
         'values(${id}, ${user_id}, ${job_id}, ${video_token})',
       application)
